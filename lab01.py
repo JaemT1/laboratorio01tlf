@@ -1,8 +1,5 @@
 from matplotlib import pyplot as plt
-from matplotlib_venn import venn2
 from matplotlib_venn import venn3
-
-
 
 def unionConjuntos(conjunto1, conjunto2):
     resultado = []
@@ -85,9 +82,9 @@ def serSuperConjunto(conjunto1, conjunto2):
     return pertenecerConjunto(conjunto1, conjunto2)
 
 # Conjuntos de prueba
-conjunto_a = {1, 2, 3, 4, 5}
-conjunto_b = {3, 4, 5, 6, 1}
-conjunto_c = {5, 6, 7, 8}
+conjunto_a = {1, 2, 3, 4, 5, 11, 7}
+conjunto_b = {3, 4, 5, 6, 1, 12, 13}
+conjunto_c = {4, 5, 6, 7, 9, 11, 12}
 
 conjuntosLista = [conjunto_a, conjunto_b, conjunto_c]
 
@@ -118,7 +115,14 @@ print("----------------------------------------------")
 diferencia_ab = diferenciaConjuntos(conjunto_a, conjunto_b)
 diferencia_ac = diferenciaConjuntos(conjunto_a, conjunto_c)
 diferencia_bc = diferenciaConjuntos(conjunto_b, conjunto_c)
+diferencia_ba = diferenciaConjuntos(conjunto_b, conjunto_a)
+diferencia_bac = diferenciaConjuntos(diferencia_ba, conjunto_c)
 diferencia_abc = diferenciaConjuntos(diferencia_ab, conjunto_c)
+diferencia_ca = diferenciaConjuntos(conjunto_c, conjunto_a)
+diferencia_cab = diferenciaConjuntos(diferencia_ca, conjunto_b)
+diferenciaInterseccionab = diferenciaConjuntos(interseccion_ab, conjunto_c)
+diferenciaInterseccionac = diferenciaConjuntos(interseccion_ac, conjunto_b)
+diferenciaInterseccionbc = diferenciaConjuntos(interseccion_bc, conjunto_a)
 print("La diferencia de A, B es: ", diferencia_ab)
 print("La diferencia de A, C es: ", diferencia_ac)
 print("La diferencia de B, C es: ", diferencia_bc)
@@ -141,8 +145,17 @@ print("¿A es subconjunto de B?", pertenecerConjunto(conjunto_a, conjunto_b))
 print("¿B es superconjunto de A?", serSuperConjunto(conjunto_a, conjunto_b))
 print("----------------------------------------------")
 
+# Graficar el diagrama de Venn (pasar una tupla en lugar de una lista)
+venn = venn3((conjunto_a, conjunto_b, conjunto_c), ('A', 'B', 'C'))
 
+# Ajustar el texto para cada área de intersección
+venn.get_label_by_id('100').set_text(','.join(map(str, diferencia_abc)))
+venn.get_label_by_id('010').set_text(','.join(map(str, diferencia_bac)))
+venn.get_label_by_id('001').set_text(','.join(map(str, diferencia_cab)))
+venn.get_label_by_id('110').set_text(','.join(map(str, diferenciaInterseccionab)))
+venn.get_label_by_id('101').set_text(','.join(map(str, diferenciaInterseccionac)))
+venn.get_label_by_id('011').set_text(','.join(map(str, diferenciaInterseccionbc)))
+venn.get_label_by_id('111').set_text(','.join(map(str, interseccion_abc)))
 
-diagram = venn3( subsets = (len(conjunto_a), len(conjunto_b), len(conjunto_c), len(interseccion_ab), len(interseccion_ac), len(interseccion_bc), len(interseccion_abc)), set_labels = ('A', 'B', 'C'))
 plt.title("Diagrama de Venn")
 plt.show()
